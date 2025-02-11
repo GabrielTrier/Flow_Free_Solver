@@ -13,9 +13,7 @@ def add_exactly_k(solver, vars_list, k):
 def add_exactly_one(solver, vars_list):
     add_exactly_k(solver, vars_list, 1)
 
-def connected_edges(v):
-        return [e for e in edges if v in e]
-    
+
 def build_sat_instance(puzzle):
     """
     Construit l'instance SAT pour un Puzzle.
@@ -53,6 +51,9 @@ def build_sat_instance(puzzle):
     for e in edges:
         for c1, c2 in combinations(allowed_colors, 2):
             solver.add_clause([-edge_vars[(e, c1)], -edge_vars[(e, c2)]])
+    
+    def connected_edges(v):
+        return [e for e in edges if v in e]
     
     #Contraintes 2 sur les nœuds
     for v in nodes:
