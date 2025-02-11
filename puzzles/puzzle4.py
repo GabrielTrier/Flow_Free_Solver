@@ -18,6 +18,6 @@ puzzle_config = {
         [[7, 7], {"color": "orange"}],
         [[8, 7], {"color": "grey"}],
         [[0, 8], {"color": "blue"}],
-        [[5, 8], {"color": "grey"}],
+        [[5, 8], {"color": "grey"}]
     ]
 }

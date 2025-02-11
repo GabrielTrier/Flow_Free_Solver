@@ -1,46 +1,73 @@
-import tkinter as tk
+import os
+from PIL import Image, ImageDraw, ImageFont
 
-# A modifier pour améliorer les affichages!!!
-# On peut sauvegarder les solutions???  faire un avant/après ?? I
-# interface en ligne
-def display_solution(puzzle, edge_solution):
-    dim = puzzle.dim
-    cell_size = 80
-    margin = 40
-    canvas_size = cell_size * dim + 2 * margin
+#Constantes d'affichage (adaptable)
+CELL_SIZE = 80
+MARGIN = 40
 
-    def cell_center(i, j):
-        x = margin + j * cell_size + cell_size/2
-        y = margin + i * cell_size + cell_size/2
-        return x, y
+#Listes de fonctions utilitaires pour l'affichage des grilles et des solutions mais surtout pour la sauvegarde!
+def cell_center(i, j):
+    x = MARGIN + j * CELL_SIZE + CELL_SIZE / 2
+    y = MARGIN + i * CELL_SIZE + CELL_SIZE / 2
+    return x, y
 
-    fen = tk.Tk()
-    fen.title("Flow Free - Solution")
-    canvas = tk.Canvas(fen, width=canvas_size, height=canvas_size, bg="white")
-    canvas.pack()
-
-    #Tracer la grille
+def draw_grid_on_image(draw, dim):
+    canvas_width = CELL_SIZE * dim + 2 * MARGIN
+    #Lignes horizontales
     for i in range(dim + 1):
-        y = margin + i * cell_size
-        canvas.create_line(margin, y, margin + dim * cell_size, y, fill="black")
+        y = MARGIN + i * CELL_SIZE
+        draw.line((MARGIN, y, MARGIN + dim * CELL_SIZE, y), fill="white")
+    #Lignes verticales
     for j in range(dim + 1):
-        x = margin + j * cell_size
-        canvas.create_line(x, margin, x, margin + dim * cell_size, fill="black")
+        x = MARGIN + j * CELL_SIZE
+        draw.line((x, MARGIN, x, MARGIN + dim * CELL_SIZE), fill="white")
 
-    #Tracer les arêtes utilisées
+def draw_terminals_on_image(draw, puzzle):
+    rayon = CELL_SIZE * 0.15
+    for (i, j), color in puzzle.terminals.items():
+        x, y = cell_center(i, j)
+        bbox = (x - rayon, y - rayon, x + rayon, y + rayon)
+        draw.ellipse(bbox, fill=color, outline="white", width=2)
+
+def draw_solution_on_image(draw, puzzle, edge_solution):
+    """Dessine les arêtes de solution sur l'image."""
     for e, color in edge_solution.items():
         (i1, j1), (i2, j2) = e
         x1, y1 = cell_center(i1, j1)
         x2, y2 = cell_center(i2, j2)
-        canvas.create_line(x1, y1, x2, y2, fill=color, width=12, capstyle=tk.ROUND)
+        draw.line((x1, y1, x2, y2), fill=color, width=12)
 
-    #Marquer les terminaux par des cercles
-    rayon = cell_size * 0.15
-    for v, color in puzzle.terminals.items():
-        i, j = v
-        x, y = cell_center(i, j)
-        canvas.create_oval(x - rayon, y - rayon, x + rayon, y + rayon,
-                           fill=color, outline="black", width=2)
-    
-    canvas.create_text(canvas_size/2, margin/2, text="Flow Free - Solution", font=("Helvetica", 16))
-    fen.mainloop()
+def save_solution_image(puzzle, edge_solution, level):
+    dim = puzzle.dim
+    new_width = CELL_SIZE * dim + 2 * MARGIN
+    new_height = CELL_SIZE * dim + 2 * MARGIN
+    img = Image.new("RGB", (new_width, new_height), "black")
+    draw = ImageDraw.Draw(img)
+
+    #Dessiner grille, terminaux et solution
+    draw_grid_on_image(draw, dim)
+    draw_terminals_on_image(draw, puzzle)
+    draw_solution_on_image(draw, puzzle, edge_solution)
+
+    title_text = "Flow Free - Puzzle Solved"
+    try:
+        font = ImageFont.truetype("arial.ttf", 16)
+    except IOError:
+        font = ImageFont.load_default()
+
+    #Utilisation de textbbox si disponible, sinon fallback sur font.getsize
+    try:
+        bbox = draw.textbbox((0, 0), title_text, font=font)
+        text_width = bbox[2] - bbox[0]
+        text_height = bbox[3] - bbox[1]
+    except AttributeError:
+        text_width, text_height = font.getsize(title_text)
+    title_position = ((new_width - text_width) / 2, MARGIN/2 - text_height/2)
+    draw.text(title_position, title_text, fill="yellow", font=font)
+
+    #Sauvegarde de l'image
+    if not os.path.exists("solutions"):
+        os.makedirs("solutions")
+    filename = f"solutions/solution_level{level}.png"
+    img.save(filename, "PNG")
+    print("Solution sauvegardée dans", filename)

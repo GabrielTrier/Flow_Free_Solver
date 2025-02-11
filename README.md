@@ -59,7 +59,6 @@ Pour résoudre le puzzle, nous réduisons le problème à une instance SAT en mo
 
 3. **Contraintes sur les Nœuds Terminaux :**  
    Chaque nœud terminal doit être connecté par exactement une arête, et cette arête doit être de la couleur imposée par le terminal.
-   
 
 ## **3. Démarche Suivie**
 
@@ -75,8 +74,6 @@ Pour résoudre le puzzle, nous réduisons le problème à une instance SAT en mo
 4. **Affichage de la Solution**  
    La solution SAT est interprétée pour afficher, via une interface graphique (Tkinter), la grille et les chemins (arêtes colorées) reliant les terminaux.
 
----
-
 ## **4. Architecture du Projet**
 
 Le projet est organisé de manière modulaire avec plusieurs fichiers :
@@ -87,36 +84,49 @@ Le projet est organisé de manière modulaire avec plusieurs fichiers :
 - **`sat_solver.py`**  
   Construit l’instance SAT en traduisant les contraintes du puzzle en clauses CNF et en associant une variable \( x(e, c) \) pour chaque arête **e** et chaque couleur **c**.
 
-- **`gui.py`**  
-  Contient le module d’affichage graphique utilisant **Tkinter** pour visualiser la solution trouvée par le solveur SAT.
+- **`display.py`**  
+  Contient les fonctions de dessin et de sauvegarde d’images de la grille, des terminaux et de la solution à l’aide de Pillow.
 
 - **`main.py`**  
-  Le fichier principal qui :
-  - Charge la configuration du puzzle depuis un fichier de configuration.
-  - Crée le puzzle et construit l’instance SAT.
-  - Résout le problème avec le solveur SAT.
-  - Affiche la solution via l’interface graphique.
+  Gère l’interface graphique (via Tkinter), la navigation entre la page d’accueil et l’interface du puzzle, ainsi que la résolution et la sauvegarde des solutions.
 
 - **`puzzles/`**  
   Ce dossier contient plusieurs fichiers de configuration (par exemple, `puzzle1.py`, `puzzle2.py`, etc.) qui définissent des puzzles sous la forme de dictionnaires.
 
----
+- **`solutions/`**  
+  Ce dossier contient les solutions des différents niveaux qui sont les différents puzzles.
+
 
 ## **5. Installation et Exécution**
 
 ### **Prérequis**
 
 - **Python 3.x**
-- **Bibliothèque `python-sat`** pour le solveur SAT  
+- **Bibliothèque `python-sat`** pour le solveur SAT ainsi que `Pillow`
 - **Tkinter** pour l'affichage graphique (généralement inclus avec Python)
 
 ### **Installation des Dépendances**
 
-Exécutez la commande suivante pour installer la bibliothèque SAT :
+Exécutez la commande suivante pour installer les dépendances:
 
 ```bash
 pip install python-sat
+pip install Pillow
 ```
+### **Execution**
+
+1. Cloner le projet ou télécharger les fichiers dans un répertoire local.
+2. Lancer le programme en exécutant :
+```bash
+python main.py
+```
+3. Naviguer à travers les différnets niveaux :
+- Une page d’accueil s'affiche avec le titre "Connecting Dots" et une grille (2x2) pour choisir le niveau (1 à 4)
+- Cliquez sur le niveau souhaité pour charger le puzzle correspondant
+- Dans l'interface du puzzle:
+    - Cliquez sur Back pour revenir ua menu principal
+    - Cliquez sur Solve pour résoudre le puzzle et afficher la solution
+    - Cliquez sur Save Solution pour sauvegarder l’image de la solution 
 ## **6. Auteurs**
 - Bouaita Rayane
 - Trier Gabriel 
