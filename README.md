@@ -37,13 +37,10 @@ Pour résoudre le puzzle, nous réduisons le problème à une instance SAT en mo
    **Chaque arête doit avoir exactement une couleur.**  
    Pour chaque arête **e**, et pour toute paire de couleurs distinctes (c1) et (c2), la clause suivante est ajoutée :
    - **Clause :**  
-     $$
-     \lnot \bigl(x(e, c_1) \land x(e, c_2)\bigr)
-     $$
+   ```¬(x(e,c1)∧ x(e,c2))```
+     
      ou équivalent en CNF :
-     $$
-     \bigl(\lnot x(e, c_1) \lor \lnot x(e, c_2)\bigr)
-     $$
+     ```(¬x(e,c1)∨¬x(e,c2))```
 
 2. **Contraintes sur les Nœuds Connecteurs (Non Terminaux) :**  
    **Chaque nœud non terminal doit être traversé par exactement deux arêtes incidentes, et ces deux arêtes doivent être de la même couleur.**  
@@ -52,9 +49,8 @@ Pour résoudre le puzzle, nous réduisons le problème à une instance SAT en mo
    - **(b) Uniformité de Couleur :**  
      Pour chaque paire d’arêtes (e1, e2) incidentes à \( v \) et pour toute paire de couleurs distinctes (c1) et (c2), on ajoute la clause :
      - **Clause :**  
-       $$
-       \lnot x(e_1, c_1) \lor \lnot x(e_2, c_2) \quad \text{si } c_1 \neq c_2.
-       $$
+       ```¬x(e1,c1) ∨ ¬x(e2,c2) ```si  c1≠c2
+
      Cela interdit que deux arêtes incidentes utilisées aient des couleurs différentes.
 
 3. **Contraintes sur les Nœuds Terminaux :**  
