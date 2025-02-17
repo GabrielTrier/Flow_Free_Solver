@@ -4,6 +4,7 @@ from puzzle import Puzzle
 from sat_solver import build_sat_instance
 import display
 from display import save_solution_image
+from gophersat_solver import solve_with_gophersat
 
 #Variables globales
 current_puzzle = None
@@ -13,6 +14,23 @@ current_canvas = None
 #Frames pour la gestion des pages
 home_frame = None
 puzzle_frame = None
+
+######################GopherSAT######################
+
+def solve_with_gophersat_interface():
+    """
+    Utilise Gophersat pour résoudre le puzzle courant et met à jour l'affichage.
+    """
+    global current_puzzle, current_canvas
+    if current_puzzle is None:
+        return
+    edge_solution = solve_with_gophersat(current_puzzle)
+    if edge_solution:
+        draw_solution(current_canvas, current_puzzle, edge_solution)
+    else:
+        print("Aucune solution trouvée avec Gophersat.")
+
+######################Affichage et SAT######################
 
 def load_puzzle_config(path):
     spec = importlib.util.spec_from_file_location("puzzle_config", path)
@@ -159,9 +177,18 @@ def create_puzzle_interface(root):
     back_btn = tk.Button(top_bar, text="← Back", bg="gray20", fg="white",
                          font=("Helvetica", 14, "bold"), command=return_to_home)
     back_btn.pack(side=tk.LEFT, padx=20)
-    solve_btn = tk.Button(top_bar, text="Solve", bg="gray20", fg="white",
+    solve_btn = tk.Button(top_bar, text="Solve (SAT)", bg="gray20", fg="white",
                           font=("Helvetica", 16, "bold"), command=solve_current_puzzle)
     solve_btn.pack(side=tk.LEFT, padx=20)
+    gupher_btn = tk.Button(
+        top_bar,
+        text="Solve (Gophersat)",
+        bg="gray20",
+        fg="white",
+        font=("Helvetica", 16, "bold"),
+        command=solve_with_gophersat_interface,
+    )
+    gupher_btn.pack(side=tk.LEFT, padx=20)
     save_btn = tk.Button(top_bar, text="Save Solution", bg="gray20", fg="white",
                          font=("Helvetica", 16, "bold"), command=save_solution)
     save_btn.pack(side=tk.LEFT, padx=20)
