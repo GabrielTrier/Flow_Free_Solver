@@ -71,3 +71,4 @@ def save_solution_image(puzzle, edge_solution, level):
     filename = f"solutions/solution_level{level}.png"
     img.save(filename, "PNG")
     print("Solution sauvegardée dans", filename)
+

@@ -5,6 +5,9 @@ from sat_solver import build_sat_instance
 import display
 from display import save_solution_image
 from gophersat_solver import solve_with_gophersat
+from gui import launch_gui
+import os
+import subprocess
 
 #Variables globales
 current_puzzle = None
@@ -201,7 +204,7 @@ def create_puzzle_interface(root):
     
     return frame
 
-def create_main_interface():
+def create_main_interface_flow_free():
     root = tk.Tk()
     root.title("Flow Free Solver")
     root.configure(bg="black")
@@ -214,6 +217,62 @@ def create_main_interface():
     puzzle_frame = create_puzzle_interface(root)
     puzzle_frame.pack_forget()
     
+    return root
+
+def create_main_interface_n_queens():
+    #fonction launchgui de test_queens
+    launch_gui()
+
+def open_pdf_Linux():
+    pdf_path = "Bouaita_Trier_Rapport.pdf"
+    if os.path.exists(pdf_path):
+        subprocess.run(["xdg-open", pdf_path], check=True)  
+    else:
+        print("Le fichier PDF n'existe pas.")
+
+def open_pdf_Windows():
+    pdf_path = "Bouaita_Trier_Rapport.pdf"
+    if os.path.exists(pdf_path):
+        subprocess.run(["start", "", pdf_path], shell=True, check=True) 
+    else:
+        print("Le fichier PDF n'existe pas.")
+
+def open_pdf_MacOS():
+    pdf_path = "Bouaita_Trier_Rapport.pdf"
+    if os.path.exists(pdf_path):
+        subprocess.run(["open", pdf_path], check=True) 
+    else:
+        print("Le fichier PDF n'existe pas.")
+
+def create_main_interface():
+    root = tk.Tk()
+    root.title("Choix du jeu")
+    root.geometry("400x350")
+    root.configure(bg="black")
+
+    frame = tk.Frame(root, bg="black")
+    frame.pack(expand=True)
+
+    queens_btn = tk.Button(frame, text="N-Queens", bg="gray20", fg="white",
+                           font=("Helvetica", 16, "bold"), command=create_main_interface_n_queens)
+    queens_btn.pack(pady=10)
+    
+    flow_free_btn = tk.Button(frame, text="Flow Free", bg="gray20", fg="white",
+                              font=("Helvetica", 16, "bold"), command=create_main_interface_flow_free)
+    flow_free_btn.pack(pady=10)
+    open_pdf_btn_linux = tk.Button(frame, text="Ouvrir le rapport (Linux)", bg="red", fg="white",
+                                   font=("Helvetica", 16, "bold"), command=open_pdf_Linux)
+    open_pdf_btn_linux.pack(pady=10)
+
+
+    open_pdf_btn_windows = tk.Button(frame, text="Ouvrir le rapport (Windows)", bg="red", fg="white",
+                                     font=("Helvetica", 16, "bold"), command=open_pdf_Windows)
+    open_pdf_btn_windows.pack(pady=10)
+
+    open_pdf_btn_macos = tk.Button(frame, text="Ouvrir le rapport (MacOS)", bg="red", fg="white",
+                                  font=("Helvetica", 16, "bold"), command=open_pdf_MacOS)
+    open_pdf_btn_macos.pack(pady=10)
+
     return root
 
 if __name__ == "__main__":
